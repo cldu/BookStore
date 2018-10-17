@@ -1,0 +1,43 @@
+﻿@model BookStore.ViewModels.BookFormViewModel
+@{
+    var title = (Model.Book == null || Model.Book.Id == 0) ? "New Book" : "Edit Book";
+    ViewBag.Title = title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@title</h2>
+
+@using (Html.BeginForm("Save", "Books"))
+{
+    @Html.ValidationSummary(true,"Please fix the following errors")
+    <div class="form-group">
+        @Html.LabelFor(b => b.Book.Name)
+        @Html.TextBoxFor(b => b.Book.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(b => b.Book.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(b => b.Book.PublishedDate)
+        @Html.TextBoxFor(b => b.Book.PublishedDate, "{0:d MMM yyyy}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(b => b.Book.PublishedDate)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(b => b.Book.CategoryId)
+        @Html.DropDownListFor(b => b.Book.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "Select Category", new { @class = "form-control" })
+        @Html.ValidationMessageFor(b => b.Book.CategoryId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(b => b.Book.NumberInStock)
+        @Html.TextBoxFor(b => b.Book.NumberInStock, new { @class = "form-control" })
+        @Html.ValidationMessageFor(b => b.Book.NumberInStock)
+    </div>
+    @Html.HiddenFor(b => b.Book.Id)
+    @Html.HiddenFor(b => b.Book.AddedDate)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
